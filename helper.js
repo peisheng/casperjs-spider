@@ -2,7 +2,6 @@
  * Created by Administrator on 2016/8/10.
  */
 function absoluteUri(base, href) {
-
     // Parse a URI and return its constituent parts
     function parseUri(url) {
         var match = String(url).replace(/^\s+|\s+$/g, '').match(/^([^:\/?#]+:)?(\/\/(?:[^:@]*(?::[^:@]*)?@)?(([^:\/?#]*)(?::(\d*))?))?([^?#]*)(\?[^#]*)?(#[\s\S]*)?/);
@@ -31,4 +30,5 @@ function absoluteUri(base, href) {
     (href.protocol || href.authority || href.pathname ? href.search : (href.search || base.search)) + href.hash;
 
 }
-exports.absoluteUri = absoluteUri;
+//exports.absoluteUri = absoluteUri;
+ module.exports={absoluteUri};

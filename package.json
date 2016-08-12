@@ -1,20 +1,17 @@
 {
-  "name": "casperjs-study",
+  "name": "node-spider",
   "version": "1.0.0",
-  "description": "casperjs-study",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
-
   },
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "casperjs": "^1.1.3",
-    "iconv-lite": "^0.4.13"
-  },
   "dependencies": {
-    "casperjs": "^1.1.3",
-    "iconv-lite": "^0.4.13"
+    "mysql": "^2.11.1",
+    "nightmare": "^2.6.1",
+    "nightmare-screenshot": "0.0.1",
+    "sequelize": "^3.24.0"
   }
 }

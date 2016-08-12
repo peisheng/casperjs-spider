@@ -1,71 +1,21 @@
 /**
- * Created by Administrator on 2016/8/10.
+ * Created by Administrator on 2016/8/12.
  */
-var startUrl = 'http://www.qq.com/';
-// URL variables
-var visitedUrls = [], pendingUrls = [];
 
-// Create instances
-var casper = require('casper').create({ /*verbose: true, logLevel: 'debug'*/ });
-var utils = require('utils')
-var helpers = require('./helper')
+var Nightmare = require('nightmare');
+var screenshotPlug=require("nightmare-screenshot");
 
-// Spider from the given URL
-function spider(url) {
+var nightmare = new Nightmare({show: false,height:8000});
 
-    // Add the URL to the visited stack
-    visitedUrls.push(url);
-
-    // Open the URL
-    casper.open(url).then(function() {
-
-        // Set the status style based on server status code
-        var status = this.status().currentHTTPStatus;
-        switch(status) {
-            case 200: var statusStyle = { fg: 'green', bold: true }; break;
-            case 404: var statusStyle = { fg: 'red', bold: true }; break;
-            default: var statusStyle = { fg: 'magenta', bold: true }; break;
-        }
-
-        // Display the spidered URL and status
-        this.echo(this.colorizer.format(status, statusStyle) + ' ' + url);
-
-        // Find links present on this page
-        var links = this.evaluate(function() {
-            var links = [];
-            Array.prototype.forEach.call(__utils__.findAll('a'), function(e) {
-                links.push(e.getAttribute('href'));
-            });
-            return links;
-        });
-
-        // Add newly found URLs to the stack
-        var baseUrl = this.getGlobal('location').origin;
-        Array.prototype.forEach.call(links, function(link) {
-            var newUrl = helpers.absoluteUri(baseUrl, link);
-            if (pendingUrls.indexOf(newUrl) == -1 && visitedUrls.indexOf(newUrl) == -1) {
-                casper.echo(casper.colorizer.format('-> Pushed ' + newUrl + ' onto the stack', { fg: 'magenta' }));
-                pendingUrls.push(newUrl);
-            }
-        });
-
-        // If there are URLs to be processed
-        if (pendingUrls.length > 0) {
-            var nextUrl = pendingUrls.shift();
-            this.echo(this.colorizer.format('<- Popped ' + nextUrl + ' from the stack', { fg: 'blue' }));
-            spider(nextUrl);
-        }
-
+var baiduNews = "http://m.news.baidu.com/news#/?_k=tivwq7";
+var mobileAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1";
+nightmare.viewport(500, 5000)
+    .useragent(mobileAgent)
+    .goto(baiduNews).evaluate(function (selector) {
+     return document.querySelector("ss")
+})
+    .wait(".newslist-container")
+    .use(screenshotPlug.screenshotSelector("e:/baidu.png","body"))
+    .run(function () {
+        console.log("ok");
     });
-
-}
-
-// Start spidering
-casper.start(startUrl, function() {
-    //spider(startUrl);
-  // spider.call(this,startUrl)
-    spider(startUrl);
-});
-
-// Start the run
-casper.run();
